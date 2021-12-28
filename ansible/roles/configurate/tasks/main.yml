@@ -1,0 +1,32 @@
+---
+- name: Install apps
+  apt: 
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    - sssd-common
+    - openjdk-16-jdk
+    - nodejs
+    - npm
+    - maven
+    
+- name: create users
+  user:
+    name: "{{ item.user }}"
+    password: "{{ item.pass }}"
+    shell: /bin/bash
+    update_password: on_create
+    append: yes
+  loop:
+    - { user: 'jarservice', pass: '{{ password1 }}' }
+    - { user: 'www-data', pass: '{{ password2  }}' }
+    - { user: 'www-user', pass: '{{ password3 }}' }
+ 
+- name: сreate directory for www-user
+  file:
+   path: /var/www-data
+   mode: 0755
+   owner: www-user
+   group: www-user
+   state: directory

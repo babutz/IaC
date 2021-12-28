@@ -1,0 +1,10 @@
+---
+- name: Configurate for sausage-store
+  hosts: all
+  become: yes
+  vars_files:
+    - vault.yml
+
+  roles:
+   - configurate
+   
