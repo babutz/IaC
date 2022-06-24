@@ -14,13 +14,16 @@ provider "yandex" {
   zone      = var.zone
 }
 
-data "yandex_vpc_subnet" "default_ru_central1_a" {
-  subnet_id = var.subnet_id
+resource "yandex_vpc_subnet" "net" {
+  name           = var.network_name
+  zone           = var.network_zone
+  network_id     = var.network_id
+  v4_cidr_blocks = var.cidr_blocks
 }
 
 resource "yandex_compute_instance" "vm" {
-  count = 1
-  name  = "exp-${count.index}"
+  count = 2
+  name  = "ansible-babentsov-${count.index}"
   resources {
     cores  = 2
     memory = 2
@@ -33,7 +36,7 @@ resource "yandex_compute_instance" "vm" {
   }
 
   network_interface {
-    subnet_id = data.yandex_vpc_subnet.default_ru_central1_a.id
+    subnet_id = yandex_vpc_subnet.net.id
     nat       = true
   }
 

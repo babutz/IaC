@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sausage-frontend-{{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "sausage-store-chart.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  revisionHistoryLimit: 15
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      affinity:
+        nodeAffinity:
+           requiredDuringSchedulingIgnoredDuringExecution:
+             nodeSelectorTerms:
+             - matchExpressions:
+                   - key: "app"
+                     operator: In
+                     values:
+                     - {{ .Chart.Name }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image }}:{{ .Chart.AppVersion }}
+          imagePullPolicy: Always
+          ports:
+            - name: {{ .Chart.Name }}
+              containerPort: 80
+    {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 12 }}
+    {{- end }}
+

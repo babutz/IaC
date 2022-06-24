@@ -1,0 +1,22 @@
+global:
+  imagePullSecrets:
+    - name: 
+  credentials:
+    vaultHost:
+    vaultToken:
+
+frontend:
+  replicas:
+  fqdn:
+  image:
+  imagePullPolicy:
+
+backend:
+  image:
+  replicas:
+  imagePullPolicy:
+
+backend-report:
+  image:
+  replicas:
+  imagePullPolicy:

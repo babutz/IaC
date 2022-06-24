@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-report
+  labels:
+    app: backend-report
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: backend-report
+  revisionHistoryLimit: 15
+  template:
+    metadata:
+      labels:
+        app: backend-report
+    spec:
+      containers:
+        - name: backend-report
+          image: gitlab.praktikum-services.ru:5050/00_babentsov_n/sausage-autobuild/backend-report:latest
+          imagePullPolicy: Always
+          env:
+            - name: VAULT_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: host
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vault-secret
+                  key: vault_token
+      imagePullSecrets:
+        - name: regcred
+
+
+---
+  apiVersion: autoscaling.k8s.io/v1
+  kind: VerticalPodAutoscaler
+  metadata:
+    name: backend-report
+  spec:
+    targetRef:
+      apiVersion: "apps/v1"
+      kind: Deployment
+      name: backend-report
+    updatePolicy:
+      updateMode: "Recreate"
+    resourcePolicy:
+      containerPolicies:
+        - containerName: "*"
+          minAllowed:
+            cpu: 0m
+            memory: 0Mi
+          maxAllowed:
+            cpu: 1
+            memory: 500Mi
+          controlledResources: ["cpu", "memory"]
+          controlledValues: RequestsAndLimits 
+

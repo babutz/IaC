@@ -1,0 +1,27 @@
+data:
+  rules.yaml: |
+    groups:
+    - name: instances
+      interval: 15s
+      rules:
+      - alert: FrontendDown
+        expr: kube_pod_container_status_terminated{pod=~"sausage-frontend-app*"} > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: Frontend is down!
+      - alert: BackendDown
+        expr: kube_pod_container_status_terminated{pod=~"backend-backend-app*"} > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: Backend is down!
+      - alert: BackendReportDown
+        expr: kube_pod_container_status_terminated{pod=~"backend-report-app"} > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: Backend-report is down!

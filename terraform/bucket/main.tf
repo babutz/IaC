@@ -5,6 +5,8 @@ terraform {
       version = "0.61.0"
     }
   }
+
+  backend "s3" {}
 }
 
 provider "yandex" {
@@ -22,11 +24,11 @@ resource "yandex_vpc_subnet" "net" {
 }
 
 resource "yandex_compute_instance" "vm" {
-  count = 10
+  count = 2
   name  = "ansible-babentsov-${count.index}"
   resources {
-    cores  = 4
-    memory = 4
+    cores  = 2
+    memory = 2
   }
 
   boot_disk {

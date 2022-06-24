@@ -1,0 +1,79 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: frontend
+  revisionHistoryLimit: 15
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      affinity:
+        nodeAffinity:
+           requiredDuringSchedulingIgnoredDuringExecution:
+             nodeSelectorTerms:
+             - matchExpressions:
+                   - key: "app"
+                     operator: In
+                     values:
+                     - frontend
+      containers:
+        - name: frontend
+          image: gitlab.praktikum-services.ru:5050/00_babentsov_n/sausage-autobuild/frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - name: frontend
+              containerPort: 80
+      imagePullSecrets:
+        - name: regcred
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: frontend
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+data:
+   nginx.conf: |
+     upstream backend {
+      server backend:8080;
+     }
+
+     server {
+         listen  80; 
+
+         location / {
+             root   /usr/src/app/static/frontend;
+             index  index.html index.htm;
+         }
+         
+         location /api
+         {
+             proxy_pass http://backend;
+         }
+     }

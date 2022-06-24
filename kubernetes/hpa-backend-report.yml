@@ -1,0 +1,25 @@
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    autoscaling.alpha.kubernetes.io/conditions: '[{"type":"AbleToScale","status":"True","lastTransitionTime":"2022-04-16T15:31:13Z","reason":"SucceededGetScale","message":"the
+      HPA controller was able to get the target''s current scale"},{"type":"ScalingActive","status":"False","lastTransitionTime":"2022-04-16T15:31:13Z","reason":"FailedGetResourceMetric","message":"the
+      HPA was unable to compute the replica count: failed to get cpu utilization:
+      missing request for cpu"}]'
+  creationTimestamp: "2022-04-16T15:30:58Z"
+  name: backend-report
+  namespace: nikolai-babentsov-0
+  resourceVersion: "13696991"
+  uid: 6f4e44d9-8f81-4f72-8881-e2ffdf076b8e
+spec:
+  maxReplicas: 5
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend-report
+  targetCPUUtilizationPercentage: 75
+status:
+  currentReplicas: 2
+  desiredReplicas: 0

@@ -1,16 +1,16 @@
 variable "token" {
   description = "TOKEN YandexCloud"
-  default     = %secret%
+  default     = "${TOKEN}"
 }
 
 variable "cloud_id" {
-  description = "ID cloud"
-  default     = %secret%
+  description = "ID cloud-praktikumdevopscourse"
+  default     = "b1g3jddf4nv5e9okle7p"
 }
 
 variable "folder_id" {
-  description = "ID folder"
-  default     = %secret%
+  description = "ID students-chapter-5-beta"
+  default     = "b1gk960dgke8q6mb3j64"
 }
 
 variable "zone" {
@@ -29,7 +29,7 @@ variable "image_id" {
 }
 
 variable "network_name" {
-  default = "default-babentsov"
+  default = "net-babentsov"
 }
 
 variable "network_zone" {
@@ -37,9 +37,9 @@ variable "network_zone" {
 }
 
 variable "network_id" {
-  default = %secret%
+  default = "enpm6e1qncdi27cijlj0"
 }
 
 variable "cidr_blocks" {
-  default = ["192.168.99.0/24"]
+  default = ["192.168.108.0/24"]
 }

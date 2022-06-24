@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vault-secret
+data:
+  host: NTEuMjUwLjAuNTc=
+  vault_token: bXlyb290
+type: Opaque
+
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: limits
+spec:
+  limits:
+  - default:
+      memory: 1024Mi
+    defaultRequest:
+      memory: 1024Mi
+    type: Container
